@@ -1,7 +1,7 @@
 from time import sleep
 
 import bokeh
-
+from datetime import date
 bokeh.sampledata.download()
 from bokeh.palettes import brewer
 from bokeh.plotting import output_file
@@ -52,15 +52,20 @@ def home():
     st.markdown("### Crop health map")
     st.image("farms.jpg", use_column_width=True)
 
-    st.markdown("## Finances :moneybag:")
+    st.markdown("## Finances brief :moneybag:")
     st.markdown("### Expenses")
     expenses = ['10000', '4350', '500', '500', '500']
-    df = pd.DataFrame(expenses, columns=['Price'], index=['Land rent', 'Water', 'Fertilizer', 'Fertilizer', 'Fertilizer'])
+    dates = [date(2020,5,15),date(2020,5,23),date(2020,5,24),date(2020,5,24),date(2020,5,24)]
+    supppliers = ['R.H. Barkley', 'The water corp.', 'Fertilizers inc.', 'Fertilizers inc.', 'Fertilizers inc.']
+    df = pd.DataFrame(np.array([expenses, dates, supppliers]).T, columns=['Value', 'date', 'Supplier'],
+                      index=['Land rent', 'Water', 'Fertilizer', 'Fertilizer', 'Fertilizer'])
     st.dataframe(df)
 
     st.markdown("### Income")
     incoming = ['7600', '300']
-    df = pd.DataFrame(incoming, columns=['Price'], index=['Rice', 'Beets'])
+    dates = [date(2020,5,22), date(2020,5,22)]
+    buyers = ['Mercadona co.', 'Direct sale - George Clayton']
+    df = pd.DataFrame(np.array([incoming, dates, buyers]).T, columns=['value', 'date', 'buyer'], index=['Rice', 'Beets'])
     st.dataframe(df)
 
 
