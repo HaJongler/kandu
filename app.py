@@ -1,8 +1,10 @@
 from time import sleep
 
 import bokeh
-bokeh.sampledata.download()
 
+bokeh.sampledata.download()
+from bokeh.palettes import brewer
+from bokeh.plotting import output_file
 import numpy as np
 import pandas as pd
 import streamlit as st
@@ -63,7 +65,7 @@ def home():
 
 
 def show_analytics():
-    st.title("Analytics")
+    st.title("Land analytics :seedling:")
     st.text("Welcome to the analytics page, here you can easily view all your data")
     crops = {
         'Peppers': 150,
@@ -138,6 +140,47 @@ def show_analytics():
     st.bokeh_chart(p)
 
 
+def show_finances():
+    st.title("Finances :euro:")
+    st.markdown("## Monthly expenses vs. income, last 12 months")
+    monthly_spend = np.random.randint(4000, 6000, 12)
+    monthly_gains = np.random.randint(3000, 10000, 12)
+    df = pd.DataFrame(np.array([monthly_gains, monthly_spend]).T, columns=["Income", "Expenses"])
+    st.area_chart(df)
+
+    st.markdown("## Breakdown of income")
+
+    N = 5
+    df = pd.DataFrame(np.random.randint(1000, 2000, size=(12, N)), columns=["Rice", "Tomatoes", "Cucumbers", "Beets", "Carrots"])
+
+    p = figure(x_range=(0, len(df) - 1), y_range=(0, 800))
+    p.grid.minor_grid_line_color = '#eeeeee'
+
+    names = ["Rice", "Tomatoes", "Cucumbers", "Beets", "Carrots"]
+    p.varea_stack(stackers=names, x='index', color=brewer['Spectral'][N], legend_label=names, source=df)
+
+    # reverse the legend entries to match the stacked order
+    p.legend.items.reverse()
+    st.bokeh_chart(p)
+
+    st.markdown("## Breakdown of expenses")
+
+    N = 4
+    df = pd.DataFrame(np.array(
+        [np.random.randint(3000,4000,12),np.random.randint(1000,2000,12),np.random.randint(300,400,12),np.random.randint(500,1000,12)]
+    ).T, columns=["Water", "Rent", "Fertilizer", "Electricity"])
+
+    p = figure(x_range=(0, len(df) - 1), y_range=(0, 800))
+    p.grid.minor_grid_line_color = '#eeeeee'
+
+    names = ["Water", "Rent", "Fertilizer", "Electricity"]
+    p.varea_stack(stackers=names, x='index', color=brewer['Spectral'][N], legend_label=names, source=df)
+
+    # reverse the legend entries to match the stacked order
+    p.legend.items.reverse()
+    st.bokeh_chart(p)
+
+
 def show_insurance():
     st.title("Insurances")
     insurances_ppd = {
@@ -189,12 +232,15 @@ def main():
     st.sidebar.markdown("## Welcome back, Jonathan!")
     st.sidebar.title("Navigation")
     app_mode = st.sidebar.radio("Please select a page",
-                                ["Home", "Analytics", "Insurance", "Contact"])
+                                ["Home", "Land analytics", "Finances", "Insurance", "Contact"])
     if app_mode == "Home":
         home()
 
-    elif app_mode == "Analytics":
+    elif app_mode == "Land analytics":
         show_analytics()
+
+    elif app_mode == "Finances":
+        show_finances()
 
     elif app_mode == "Insurance":
         show_insurance()
