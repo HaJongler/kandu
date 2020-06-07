@@ -142,18 +142,27 @@ def show_analytics():
 
 def show_finances():
     st.title("Finances :euro:")
-    st.markdown("## Monthly expenses vs. income, last 12 months")
-    monthly_spend = np.random.randint(4000, 6000, 12)
-    monthly_gains = np.random.randint(3000, 10000, 12)
+    num = {
+        "3 Months": 3,
+        "6 Months": 6,
+        "1 Year": 12,
+        "18 Months": 18,
+        "2 Years": 24
+    }
+    period = st.selectbox("Select time period", list(num.keys()))
+
+    st.markdown("### Monthly expenses vs. income")
+    monthly_spend = np.random.randint(4000, 6000, num[period])
+    monthly_gains = np.random.randint(3000, 10000, num[period])
     df = pd.DataFrame(np.array([monthly_gains, monthly_spend]).T, columns=["Income", "Expenses"])
     st.area_chart(df)
 
     st.markdown("## Breakdown of income")
 
     N = 5
-    df = pd.DataFrame(np.random.randint(1000, 2000, size=(12, N)), columns=["Rice", "Tomatoes", "Cucumbers", "Beets", "Carrots"])
+    df = pd.DataFrame(np.random.randint(1000, 2000, size=(num[period], N)), columns=["Rice", "Tomatoes", "Cucumbers", "Beets", "Carrots"])
 
-    p = figure(x_range=(0, len(df) - 1), y_range=(0, 800))
+    p = figure(x_range=(1, len(df)))
     p.grid.minor_grid_line_color = '#eeeeee'
 
     names = ["Rice", "Tomatoes", "Cucumbers", "Beets", "Carrots"]
@@ -167,10 +176,13 @@ def show_finances():
 
     N = 4
     df = pd.DataFrame(np.array(
-        [np.random.randint(3000,4000,12),np.random.randint(1000,2000,12),np.random.randint(300,400,12),np.random.randint(500,1000,12)]
+        [np.random.randint(3000,4000,num[period]),
+         np.random.randint(1000,2000,num[period]),
+         np.random.randint(300,400,num[period]),
+         np.random.randint(500,1000,num[period])]
     ).T, columns=["Water", "Rent", "Fertilizer", "Electricity"])
 
-    p = figure(x_range=(0, len(df) - 1), y_range=(0, 800))
+    p = figure(x_range=(1, len(df)))
     p.grid.minor_grid_line_color = '#eeeeee'
 
     names = ["Water", "Rent", "Fertilizer", "Electricity"]
